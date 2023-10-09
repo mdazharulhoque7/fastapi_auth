@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, APIRouter
+from app.services.auth import generate_role
 from app.config import db
 
 
@@ -15,6 +16,7 @@ def init_app():
     @app.on_event('startup')
     async def startup():
         await db.create_all()
+        await generate_role()
 
     @app.on_event('shutdown')
     async def shutdown():
