@@ -16,4 +16,5 @@ class User(SQLModel, TimeMixin, table=True):
     person_id: Optional[str] = Field(default=None, foreign_key='persons.id')
     person: Optional['Person'] = Relationship(back_populates='user')
 
-    roles: List = Relationship(back_populates='users', link_model=UserRole)
+    roles: List["AuthRole"] = Relationship(
+        back_populates='users', link_model=UserRole)

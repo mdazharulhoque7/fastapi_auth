@@ -6,13 +6,15 @@ from app.schemas.auth.schemas import (UserRegisterSchema,
 from app.services.auth import AuthService
 
 
-router = APIRouter(prefix="auth", tags=["Authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/register", response_model=ResponseSchema, response_model_exclude_none=True)
 async def register(request_body: UserRegisterSchema):
     person = await AuthService.register_service(request_body)
-    return ResponseSchema(detail=f"{person.name} is registerd successfully")
+    import pdb
+    pdb.set_trace()
+    return ResponseSchema(detail=f"User registerd successfully")
 
 
 @router.post("/login", response_model=ResponseSchema)

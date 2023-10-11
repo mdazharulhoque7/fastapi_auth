@@ -1,24 +1,25 @@
 from typing import List
-from app.repositories import BaseRepository
-from app.models.auth.role import AuthRole
 from sqlalchemy.future import select
+
 from app.config import db, commit_rollback
+from app.models.auth.role import AuthRole
+from app.repositories import BaseRepository
 
 
 class AuthRoleRepository(BaseRepository):
     model = AuthRole
 
     @staticmethod
-    async def find_by_role_name(name: str):
-        query = select(AuthRole).where(AuthRole.name == name)
+    async def find_by_role_name(role_name: str):
+        query = select(AuthRole).where(AuthRole.name == role_name)
         return (await db.execute(query)).scalar_one_or_none()
 
     @staticmethod
-    async def find_by_role_name_list(name_list: List[str]):
-        query = select(AuthRole).where(AuthRole.name.in_(name_list))
-        return (await db.execute(query)).scalars.all()
+    async def find_by_list_role_name(role_name: List[str]):
+        query = select(AuthRole).where(AuthRole.name.in_(role_name))
+        return (await db.execute(query)).scalars().all()
 
     @staticmethod
-    async def create_list(role_list: List[AuthRole]):
-        db.add_all(role_list)
+    async def create_list(role_name: List[AuthRole]):
+        db.add_all(role_name)
         await commit_rollback()

@@ -15,11 +15,12 @@ DB_CONFIG = f'postgresql+asyncpg://postgres:123456@localhost:5432/fastapitest'
 
 
 class AsyncDatabaseSession:
+
     def __init__(self) -> None:
         self.session = None
         self.engine = None
 
-    def __getattr__(self, name: str) -> Any:
+    def __getattr__(self, name):
         return getattr(self.session, name)
 
     def init(self):
@@ -37,7 +38,7 @@ db = AsyncDatabaseSession()
 
 async def commit_rollback():
     try:
-        db.commit()
+        await db.commit()
     except Exception:
-        db.rollback()
+        await db.rollback()
         raise

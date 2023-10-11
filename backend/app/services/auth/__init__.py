@@ -29,13 +29,14 @@ class AuthService:
         # create uuid
         _person_id = str(uuid4())
         _user_id = str(uuid4())
+        _user_role_id = str(uuid4())
 
         # convert birth_date type from submitted str to date
-        birth_date = datetime.datetime.strftime(register.birth, '%d-%m-%Y')
+        birth_date = datetime.datetime.strptime(register.birth, '%d-%m-%Y')
 
         # Open default profile image to string base 64 format
         with open("./media/profile.png", "rb") as f:
-            image_str = base64.b64decode(f.read())
+            image_str = base64.b64encode(f.read())
         image_str = "data:image/png;base64,"+image_str.decode("utf-8")
 
         # Mapping submitted data to the class entity table
@@ -57,13 +58,14 @@ class AuthService:
         )
 
         # Every user will be set to defaulf user role while register
-        _role = AuthRoleRepository.find_by_role_name('user')
+        _role = await AuthRoleRepository.find_by_role_name('user')
 
         # Prepare UserRole Model with default 'user' Role
-        _user_role = UserRole(user_id=_user_id, role_id=_role.id)
+        _user_role = UserRole(
+            id=_user_role_id, user_id=_user_id, role_id=_role.id)
 
         # Validate against same username
-        _user_exist = UserRepository.find_by_username(register.username)
+        _user_exist = await UserRepository.find_by_username(register.username)
         if _user_exist:
             raise HTTPException(
                 status_code=400,
@@ -71,7 +73,7 @@ class AuthService:
             )
 
         # Validate against same email
-        _user_exist = UserRepository.find_by_email(register.email)
+        _user_exist = await UserRepository.find_by_email(register.email)
         if _user_exist:
             raise HTTPException(
                 status_code=400,
@@ -108,7 +110,8 @@ class AuthService:
 
 # Generate roles manually
 async def generate_role():
-    _role = await RoleRepository.find_by_list_role_name(["admin", "user"])
+    _role = await AuthRoleRepository.find_by_list_role_name(["admin", "user"])
     if not _role:
         await AuthRoleRepository.create_list(
-            [AuthRole(id=str(uuid4()), role_name="admin"), AuthRole(id=str(uuid4()), role_name="user")])
+            [AuthRole(id=str(uuid4()), name="admin"),
+             AuthRole(id=str(uuid4()), name="user")])

@@ -4,7 +4,7 @@ from app.models.mixins import TimeMixin
 
 
 class UserRole(SQLModel, TimeMixin, table=True):
-    __tablename__ = 'userroles'
+    __tablename__ = 'user_roles'
 
     id: Optional[str] = Field(None, primary_key=True, nullable=False)
     user_id: Optional[str] = Field(default=None, foreign_key='users.id')

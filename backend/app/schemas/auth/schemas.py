@@ -35,6 +35,7 @@ class UserRegisterSchema(BaseModel):
     def sex_validation(cls, v):
         if hasattr(Gender, v) is False:
             raise HTTPException(status_code=400, detail="Invalid input gender")
+        return v
 
 
 class LoginSchema(BaseModel):
