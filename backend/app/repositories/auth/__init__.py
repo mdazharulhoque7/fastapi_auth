@@ -40,13 +40,13 @@ class JWTRepository:
 class JWTBearer(HTTPBearer):
 
     def __init__(self, auto_error: bool = True):
-        super(JWTBearer).__init__(auto_error=auto_error)
+        super(JWTBearer, self).__init__(auto_error=auto_error)
 
-    async def __call__(self, request: Request) -> Coroutine[Any, Any, HTTPAuthorizationCredentials | None]:
+    async def __call__(self, request: Request):
 
-        credentials = await super(JWTBearer).__call__(request)
+        credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if credentials:
-            if not credentials.schema == 'Bearer':
+            if not credentials.scheme == 'Bearer':
                 raise HTTPException(
                     status_code=403,
                     detail=dict(status='Forbidden!',

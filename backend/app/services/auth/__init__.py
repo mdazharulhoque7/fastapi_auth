@@ -91,7 +91,7 @@ class AuthService:
 
     @staticmethod
     async def login_service(login: LoginSchema):
-        _user = UserRepository.find_by_username(login.username)
+        _user = await UserRepository.find_by_username(login.username)
         if _user is not None:
             if not pwd_context.verify(login.password, _user.password):
                 raise HTTPException(
