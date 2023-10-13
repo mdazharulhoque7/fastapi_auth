@@ -13,7 +13,7 @@ def init_app():
     db.init()
 
     app = FastAPI(
-        title='Fast Api Login',
+        title='FunnelERP Login',
         description='An Smart ERP solution for Business',
         version='1.0.0'
     )
