@@ -6,7 +6,7 @@ export default function ForgetPassword(props) {
         <>
             <div>
                 <h1 className='mb-4 text-3xl font-bold text-center cursor-pointer'>
-                    Welcome to FunnelERP
+                    Welcome to FastApi/React
                 </h1>
                 <h3 className='mb-4 text-2xl font-bold text-center cursor-pointer'>
                     Forget your password?</h3>

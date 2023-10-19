@@ -37,7 +37,7 @@ function Login(props) {
     return (
         <>
             <div>
-                <h1 className='mb-4 text-3xl font-bold text-center cursor-pointer'>Welcome to FunnelERP</h1>
+                <h1 className='mb-4 text-3xl font-bold text-center cursor-pointer'>Welcome to FastApi/React</h1>
                 <p className='mx-auto mb-8 text-sm font-semibold tracking-wide text-center text-gray-700 cursor-pointer w-80'>Please login to your account!</p>
             </div>
             <form onSubmit={formSubmitHandler}>
