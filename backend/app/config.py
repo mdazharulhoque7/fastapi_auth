@@ -11,7 +11,7 @@ ACCESS_TOKEN_EXPIRE_IN_MINUTES = 15
 
 
 # DATABASE CONFIG
-DB_CONFIG = f'postgresql+asyncpg://postgres:123456@localhost:5432/fastapi_auth'
+DB_CONFIG = f'postgresql+asyncpg://postgres:123456@localhost:5432/fastapitest'
 
 
 class AsyncDatabaseSession:

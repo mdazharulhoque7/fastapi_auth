@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 function Login(props) {
 
@@ -27,10 +28,24 @@ function Login(props) {
 
     const formSubmitHandler = async (event) => {
         event.preventDefault();
-        console.log(formData);
 
         // post data to login api for authentication
-        await axios.post("")
+        await axios.post(process.env.REACT_APP_BACKEND_URL + "/auth/login", formData)
+            .then((res) => {
+                localStorage.setItem("auth_token", res.data.result.access_token);
+                localStorage.setItem("auth_token_type", res.data.result.token_type);
+                toast.success(res.data.detail);
+
+                // Reload the Page after successful login
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
+            })
+            .catch((err) => {
+                toast.error(err.response.data.detail)
+            })
+
+
     }
 
 
