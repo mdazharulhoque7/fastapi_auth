@@ -1,7 +1,49 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { toast } from 'react-toastify'
 
 export default function ForgetPassword(props) {
+    // Form State
+    const [formData, setFormData] = useState({
+        email: "",
+        new_password: ""
+    })
+
+    const onChangeFormState = (label, event) => {
+        switch (label) {
+            case 'email':
+                setFormData({ ...formData, email: event.target.value });
+                break;
+            case 'new_password':
+                setFormData({ ...formData, new_password: event.target.value });
+                break;
+            default:
+                break;
+        }
+    }
+
+    const navigate = useNavigate();
+
+    const onFormSubmitHandler = async (event) => {
+        event.preventDefault();
+        console.log(formData);
+        await axios.post(process.env.REACT_APP_BACKEND_URL + "/auth/forget_password", formData)
+            .then((res) => {
+                // redirect to login component
+                navigate('/login');
+                toast.success(res.data.detail);
+                // reload browser
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
+            })
+            .catch((error) => {
+                toast.error(error.response.data.detail)
+            })
+    }
+
+
     return (
         <>
             <div>
@@ -14,15 +56,22 @@ export default function ForgetPassword(props) {
                     Now update your account password here.
                 </p>
             </div>
-            <form>
+            <form onSubmit={onFormSubmitHandler}>
                 <div className='space-y-4'>
                     <input type='email'
                         placeholder='Email'
+                        onChange={(event) => {
+                            onChangeFormState('email', event)
+                        }}
                         className='block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40' />
                 </div>
 
                 <div className='mt-2 space-y-4'>
-                    <input type='password' placeholder='New Password' className='block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40' />
+                    <input type='password'
+                        onChange={(event) => {
+                            onChangeFormState('new_password', event)
+                        }}
+                        placeholder='New Password' className='block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40' />
                 </div>
 
                 <div className="mt-6 text-center">
