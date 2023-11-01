@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Any, Coroutine, Optional
 from jose import jwt
+from jose.exceptions import ExpiredSignatureError
 from fastapi import Request, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_IN_MINUTES
@@ -69,4 +70,12 @@ class JWTBearer(HTTPBearer):
 
     @staticmethod
     def verify_token(token: str):
-        return True if jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) is not None else False
+        try:
+            return True if jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) is not None else False
+        except ExpiredSignatureError as exp:
+            raise HTTPException(
+                status_code=403,
+                detail=dict(status='Forbidden!',
+                            message=str(exp)))
+
+        return False

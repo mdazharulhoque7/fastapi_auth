@@ -1,7 +1,9 @@
 import { React, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { toast } from "react-toastify";
 
 export default function Register(props) {
   //   Registration Form State
@@ -76,12 +78,31 @@ export default function Register(props) {
         setFormData({ ...formData, confirm_password: event.target.value })
         break;
 
-      default:
-        break;
-
     }
   }
 
+  const navigate = useNavigate();
+  // Form Submit Handler
+  const onSubmitFromHandler = async (event) => {
+    event.preventDefault();
+    console.log(formData);
+    console.log('-----------Submitted')
+    // Post data to register api
+    await axios.post(process.env.REACT_APP_BACKEND_URL + '/auth/register', formData)
+      .then((res) => {
+        // redirect to login component
+        navigate("/login")
+        toast.success(res.data.detail);
+
+        // reload page
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.detail)
+      })
+  }
   return (
     <>
       <div>
@@ -92,11 +113,14 @@ export default function Register(props) {
           Create An Account
         </p>
       </div>
-      <form>
+      <form onSubmit={onSubmitFromHandler}>
         <div className="space-y-4">
           <input
             type="text"
             placeholder="Name"
+            onChange={(event) => {
+              onChangeValue('name', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 
@@ -105,10 +129,17 @@ export default function Register(props) {
             dateFormat="dd-MM-yyyy"
             placeholderText="Birth Date"
             selected={dTBirthDate}
+            onChange={(event) => {
+              onChangeValue('birth', event)
+            }}
           />
 
           <select
+            value={formData.gender}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
+            onChange={(event) => {
+              onChangeValue('gender', event)
+            }}
           >
             {genderOptions.map((option) => {
               if (option.value === "") {
@@ -130,24 +161,36 @@ export default function Register(props) {
           <input
             type="number"
             placeholder="Phone Number"
+            onChange={(event) => {
+              onChangeValue('phone_number', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 
           <input
             type="email"
             placeholder="Email"
+            onChange={(event) => {
+              onChangeValue('email', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 
           <input
             type="text"
             placeholder="Username"
+            onChange={(event) => {
+              onChangeValue('username', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 
           <input
             type="password"
             placeholder="Password"
+            onChange={(event) => {
+              onChangeValue('password', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 
@@ -155,6 +198,9 @@ export default function Register(props) {
           <input
             type="password"
             placeholder="Confirm Password"
+            onChange={(event) => {
+              onChangeValue('confirm_password', event)
+            }}
             className="block w-full px-4 py-3 text-sm border rounded-lg outline-none focus:ring-1 focus: ring-cyan-400 focus:shadow-cyan-500/40"
           ></input>
 

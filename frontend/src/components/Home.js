@@ -17,9 +17,18 @@ export default function Home() {
         })
             .then((res) => {
                 setUser(res.data.result);
+                console.log(res);
             })
-            .catch((err) => {
-                console.log(err)
+            .catch((error) => {
+                // remove login details from localstorage
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('auth_token_type');
+                console.log(error);
+                // notify
+                toast.info("Please login again");
+                setTimeout(() => {
+                    window.location.reload()
+                }, 1000);
             })
     }, []);
 
@@ -42,7 +51,7 @@ export default function Home() {
 
     return (
         <div className='flex flex-row items-center justify-center w-full h-screen font-sans bg-gray-200'>
-            <div className='mx-auto bg-white shadow-xl card w-96 hover:shadow'>
+            <div className='mx-auto bg-white rounded-md shadow-xl card w-96 hover:shadow'>
                 <img className='w-32 mx-auto -mt-20 border-8 border-white rounded-full'
                     alt="profile"
                     src={user.profile}
